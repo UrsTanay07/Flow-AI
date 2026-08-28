@@ -1,0 +1,5 @@
+{
+  "name": "FlowAI Traffic",
+  "description": "Software-only traffic optimization platform for Indian cities using adaptive signal timing and real-time rerouting.",
+  "requestFramePermissions": []
+}

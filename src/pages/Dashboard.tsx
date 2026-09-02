@@ -41,6 +41,7 @@ export default function Dashboard() {
   const [predictiveTime, setPredictiveTime] = useState<number>(14);
   const [weatherMode, setWeatherMode] = useState<"clear" | "rain" | "smog">("clear");
   const [traffic, setTraffic] = useState<TrafficSnapshot | null>(null);
+  const [streamConnected, setStreamConnected] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [prediction, setPrediction] = useState<Prediction | null>(null);
 
@@ -48,8 +49,9 @@ export default function Dashboard() {
     let active = true;
     const refresh = () => api.traffic().then((snapshot) => active && setTraffic(snapshot)).catch(() => undefined);
     refresh();
-    const timer = window.setInterval(refresh, 60_000);
-    return () => { active = false; window.clearInterval(timer); };
+    const closeStream = api.trafficStream((snapshot) => active && setTraffic(snapshot), (connected) => active && setStreamConnected(connected));
+    const fallbackTimer = window.setInterval(refresh, 60_000);
+    return () => { active = false; closeStream(); window.clearInterval(fallbackTimer); };
   }, []);
 
   useEffect(() => {
@@ -101,11 +103,12 @@ export default function Dashboard() {
   ];
 
   return (
-    <div className="space-y-8">
-      <div className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-end">
+    <div className="app-page">
+      <div className="app-header">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight mb-2">Live Dashboard</h1>
-          <p className="text-gray-500 dark:text-gray-400">Real-time traffic metrics across major Indian metros.</p>
+          <p className="app-eyebrow">Network intelligence</p>
+          <h1 className="app-title">Live Dashboard</h1>
+          <p className="app-subtitle">Real-time traffic metrics across major Indian metros.</p>
         </div>
         <div className="flex flex-col items-start sm:items-end gap-2">
           <div className="flex items-center gap-2">
@@ -114,24 +117,24 @@ export default function Dashboard() {
               className={`px-3 py-1 ${isStale ? "border-amber-500 text-amber-600" : traffic?.source === "live" ? "border-green-500 text-green-600" : "border-blue-500 text-blue-600"}`}
             >
               <Database className="w-3 h-3 mr-1.5" />
-              {isStale ? "Data stale" : traffic?.source === "live" ? "Live provider" : "Demo data"}
+              {isStale ? "Data stale" : streamConnected ? "Live stream" : traffic?.source === "live" ? "Live provider" : "Demo data"}
             </Badge>
             <Button variant="ghost" size="icon" onClick={refreshTraffic} disabled={isRefreshing} aria-label="Refresh traffic data">
               <RefreshCw className={`w-4 h-4 ${isRefreshing ? "animate-spin" : ""}`} />
             </Button>
           </div>
-          <span className="text-xs text-gray-400">
+          <span className="text-xs text-gray-400" aria-live="polite">
             {traffic ? `${traffic.sourceLabel} · updated ${snapshotAgeMinutes === 0 ? "just now" : `${snapshotAgeMinutes}m ago`}` : "Connecting to traffic service…"}
           </span>
         </div>
       </div>
 
       {/* AI Sandbox Control Center */}
-      <Card className="border-blue-500/30 dark:border-blue-500/20 bg-blue-50/50 dark:bg-blue-900/10 shadow-[0_0_30px_rgba(59,130,246,0.1)]">
+      <Card className="border-[#f36458]/30 bg-[#f36458]/5 dark:bg-[#f36458]/[0.06]">
         <CardHeader className="pb-2">
           <CardTitle className="text-lg font-bold flex items-center justify-between">
-            <span className="flex items-center gap-2"><Activity className="w-5 h-5 text-blue-500" /> AI Predictive Sandbox</span>
-            <span className="text-blue-600 font-mono text-xl">{predictiveTime}:00 HRS</span>
+            <span className="flex items-center gap-2"><Activity className="w-5 h-5 text-[#f36458]" /> AI Predictive Sandbox</span>
+            <span className="text-[#f36458] font-mono text-xl">{predictiveTime}:00 HRS</span>
           </CardTitle>
           <CardDescription className="flex flex-wrap items-center gap-2">
             Scrub time forward to see server-calculated predicted delays, or simulate severe weather.
@@ -144,7 +147,7 @@ export default function Dashboard() {
             <div className="space-y-4">
               <div className="flex justify-between text-xs font-bold text-gray-500">
                 <span>00:00</span>
-                <span className="text-blue-500">PEAK: 09:00</span>
+                <span className="text-[#f36458]">PEAK: 09:00</span>
                 <span>12:00</span>
                 <span className="text-red-500">PEAK: 18:00</span>
                 <span>24:00</span>
@@ -155,7 +158,7 @@ export default function Dashboard() {
                 max="24" 
                 value={predictiveTime}
                 onChange={(e) => setPredictiveTime(parseInt(e.target.value))}
-                className="w-full h-2 bg-gray-200 dark:bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-blue-500 hover:accent-blue-400 transition-all"
+                className="w-full h-2 bg-gray-200 dark:bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-[#f36458] transition-all"
               />
             </div>
             
@@ -251,7 +254,7 @@ export default function Dashboard() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.3 }}
           >
-            <Card className={`border-black dark:border-black transition-all duration-300 ${stat.title === "Simulated Congestion" && dynamicStats.congestionIndex > 85 ? "border-red-500 dark:border-red-500 shadow-[0_0_15px_rgba(239,68,68,0.2)]" : "hover:border-black dark:hover:border-white"}`}>
+            <Card className={`transition-all duration-300 hover:-translate-y-0.5 ${stat.title === "Simulated Congestion" && dynamicStats.congestionIndex > 85 ? "border-red-500 dark:border-red-500 shadow-[0_0_15px_rgba(239,68,68,0.2)]" : ""}`}>
               <CardContent className="p-6">
                 <div className="flex justify-between items-start">
                   <div className={`p-2 rounded-lg bg-gray-50 dark:bg-neutral-900 ${stat.color}`}>
@@ -275,7 +278,7 @@ export default function Dashboard() {
       {/* Charts Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Congestion by Zone */}
-        <Card className="border-black dark:border-black relative overflow-hidden">
+        <Card className="relative overflow-hidden">
           {dynamicStats.congestionIndex > 80 && (
              <div className="absolute top-0 right-0 p-2">
                <Badge variant="destructive" className="animate-pulse">CRITICAL ZONES</Badge>
@@ -309,7 +312,7 @@ export default function Dashboard() {
         </Card>
 
         {/* Status Distribution */}
-        <Card className="border-black dark:border-black">
+        <Card>
           <CardHeader>
             <CardTitle className="text-lg font-bold">Status Distribution Shift</CardTitle>
           </CardHeader>

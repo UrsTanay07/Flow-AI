@@ -16,6 +16,7 @@ import { Logo } from "@/components/Logo";
 
 import { Toaster } from "sonner";
 import { CommandMenu } from "./components/CommandMenu";
+import { NetworkStatus } from "./components/NetworkStatus";
 import { api, type SessionUser } from "./lib/api";
 
 const Home = lazy(() => import("./pages/Home"));
@@ -35,7 +36,7 @@ const isPage = (value: string): value is Page => PAGE_IDS.includes(value as Page
 const PageLoading = () => (
   <div className="min-h-[50vh] grid place-items-center" role="status" aria-live="polite">
     <div className="flex items-center gap-3 text-sm font-medium text-gray-500 dark:text-gray-400">
-      <span className="h-2.5 w-2.5 rounded-full bg-blue-500 animate-pulse" aria-hidden="true" />
+      <span className="h-2.5 w-2.5 rounded-full bg-[#f36458] animate-pulse" aria-hidden="true" />
       Loading city operations…
     </div>
   </div>
@@ -127,7 +128,7 @@ export default function App() {
     return (
       <div className="min-h-screen bg-[#030712] grid place-items-center text-white" role="status" aria-live="polite">
         <div className="flex items-center gap-3 text-sm text-gray-300">
-          <span className="h-2.5 w-2.5 rounded-full bg-blue-500 animate-pulse" aria-hidden="true" />
+          <span className="h-2.5 w-2.5 rounded-full bg-[#f36458] animate-pulse" aria-hidden="true" />
           Connecting to FlowAI…
         </div>
       </div>
@@ -145,15 +146,18 @@ export default function App() {
   return (
     <>
       <div className="min-h-screen bg-[#ededed] text-gray-900 dark:bg-[#0b0b0b] dark:text-gray-100 transition-colors duration-300 relative">
+      <a href="#main-content" className="sr-only fixed left-4 top-4 z-[100] rounded-[5px] bg-[#f36458] px-4 py-2 text-sm font-semibold text-[#0b0b0b] focus:not-sr-only">
+        Skip to content
+      </a>
       
       
       {/* Navigation */}
       <div className="sticky top-0 z-50 w-full bg-white/95 dark:bg-[#0b0b0b]/95 backdrop-blur-md border-b border-black/10 dark:border-white/10">
-        <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
           {/* Brand */}
           <button
             type="button"
-            className="flex items-center gap-2 rounded-xl text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+            className="flex items-center gap-2 rounded-[6px] text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f36458]"
             onClick={() => navigate("home")}
             aria-label="Go to FlowAI home"
           >
@@ -196,7 +200,7 @@ export default function App() {
               </div>
               <button
                 onClick={handleLogout}
-                className="px-3 py-1.5 rounded-lg text-xs font-semibold border border-red-500/30 text-red-500 hover:bg-red-500/10 transition-colors"
+                className="px-3 py-1.5 rounded-[5px] text-xs font-semibold border border-red-500/30 text-red-500 hover:bg-red-500/10 transition-colors"
               >
                 Logout
               </button>
@@ -227,14 +231,14 @@ export default function App() {
               exit={{ opacity: 0, height: 0 }}
               className="md:hidden overflow-hidden border-t border-gray-200/60 dark:border-white/10"
             >
-              <div className="max-w-7xl mx-auto px-4 py-3 grid gap-1">
+              <div className="max-w-[1440px] mx-auto px-4 py-3 grid gap-1">
                 {navItems.map((item) => (
                   <button
                     key={item.id}
                     type="button"
                     onClick={() => navigate(item.id as Page)}
                     aria-current={currentPage === item.id ? "page" : undefined}
-                    className={`w-full rounded-xl px-4 py-3 text-left text-sm font-medium transition-colors ${
+                    className={`w-full rounded-[5px] px-4 py-3 text-left text-sm font-medium transition-colors ${
                       currentPage === item.id
                         ? "bg-black text-white dark:bg-white dark:text-black"
                         : "hover:bg-black/5 dark:hover:bg-white/10"
@@ -246,7 +250,7 @@ export default function App() {
                 <button
                   type="button"
                   onClick={handleLogout}
-                  className="sm:hidden w-full rounded-xl px-4 py-3 text-left text-sm font-medium text-red-500 hover:bg-red-500/10"
+                  className="sm:hidden w-full rounded-[5px] px-4 py-3 text-left text-sm font-medium text-red-500 hover:bg-red-500/10"
                 >
                   Log out
                 </button>
@@ -257,7 +261,7 @@ export default function App() {
       </div>
 
       {/* Main Content */}
-      <main id="main-content" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+      <main id="main-content" className="relative z-10 max-w-[1440px] mx-auto px-4 sm:px-6 py-6 sm:py-10">
         <AnimatePresence mode="wait">
           <motion.div
             key={currentPage}
@@ -281,9 +285,10 @@ export default function App() {
       {/* Advanced UI Interactions */}
       <Toaster position="bottom-right" theme="dark" richColors expand={true} />
       <CommandMenu />
+      <NetworkStatus />
 
       {/* Footer */}
-      <footer className="relative z-10 mx-auto flex max-w-7xl flex-col gap-4 border-t border-black/10 px-6 py-12 text-sm text-gray-500 dark:border-white/10 dark:text-[#797979] sm:flex-row sm:items-center sm:justify-between">
+      <footer className="relative z-10 mx-auto flex max-w-[1440px] flex-col gap-4 border-t border-black/10 px-6 py-12 text-sm text-gray-500 dark:border-white/10 dark:text-[#797979] sm:flex-row sm:items-center sm:justify-between">
         <p>FlowAI Traffic — accountable urban mobility intelligence.</p>
         <p className="saniti-eyebrow">Built for Bharat</p>
       </footer>

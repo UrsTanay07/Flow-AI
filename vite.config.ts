@@ -1,18 +1,27 @@
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import {fileURLToPath} from 'node:url';
-import path from 'node:path';
-import os from 'node:os';
 import {defineConfig} from 'vite';
 
 export default defineConfig(() => {
   return {
-    cacheDir: path.join(os.tmpdir(), 'flowai-vite-cache'),
     plugins: [react(), tailwindcss()],
     define: {},
     resolve: {
       alias: {
         '@': fileURLToPath(new URL('./src', import.meta.url)),
+      },
+    },
+    build: {
+      target: 'es2022',
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            'vendor-motion': ['motion/react'],
+            'vendor-charts': ['recharts'],
+            'vendor-map': ['leaflet', 'react-leaflet'],
+          },
+        },
       },
     },
     server: {

@@ -73,4 +73,14 @@ export const api = {
   approveOperation: (id: string) => request<{ operation: AuditRecord }>(`/api/operations/${id}/approve`, { method: "POST" }),
   rejectOperation: (id: string) => request<{ operation: AuditRecord }>(`/api/operations/${id}/reject`, { method: "POST" }),
   rollbackOperation: (id: string) => request<{ operation: AuditRecord }>(`/api/operations/${id}/rollback`, { method: "POST" }),
+  trafficStream: (onSnapshot: (snapshot: TrafficSnapshot) => void, onStatus?: (connected: boolean) => void) => {
+    const stream = new EventSource("/api/traffic/stream", { withCredentials: true });
+    stream.addEventListener("snapshot", (event) => {
+      try { onSnapshot(JSON.parse((event as MessageEvent<string>).data) as TrafficSnapshot); }
+      catch { onStatus?.(false); }
+    });
+    stream.addEventListener("open", () => onStatus?.(true));
+    stream.addEventListener("error", () => onStatus?.(false));
+    return () => stream.close();
+  },
 };

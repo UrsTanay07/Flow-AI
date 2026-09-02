@@ -24,7 +24,9 @@ app.use((_request, response, next) => {
 
 app.use(createApiApp());
 
-if (process.env.NODE_ENV === "production") {
+const serveBuiltApp = process.env.NODE_ENV === "production" || process.env.FLOWAI_SERVE_DIST === "true";
+
+if (serveBuiltApp) {
   app.use(express.static(path.join(root, "dist"), { maxAge: "1h", etag: true }));
   app.get("*", (_request, response) => response.sendFile(path.join(root, "dist", "index.html")));
 } else {
@@ -47,9 +49,11 @@ if (process.env.NODE_ENV === "production") {
 
 const explicitPort = process.env.PORT !== undefined;
 const maxFallbacks = explicitPort ? 0 : 10;
+let activeServer: ReturnType<typeof app.listen> | null = null;
 
 const listen = (port: number, fallbackCount = 0) => {
   const server = app.listen(port, "0.0.0.0");
+  activeServer = server;
   server.once("listening", () => {
     console.log(`FlowAI is ready at http://localhost:${port}`);
   });
@@ -68,3 +72,13 @@ const listen = (port: number, fallbackCount = 0) => {
 };
 
 listen(preferredPort);
+
+const shutdown = (signal: string) => {
+  console.log(JSON.stringify({ level: "info", event: "shutdown", signal }));
+  if (!activeServer) return process.exit(0);
+  activeServer.close(() => process.exit(0));
+  setTimeout(() => process.exit(1), 10_000).unref();
+};
+
+process.once("SIGINT", () => shutdown("SIGINT"));
+process.once("SIGTERM", () => shutdown("SIGTERM"));

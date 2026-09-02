@@ -94,11 +94,12 @@ export default function Performance() {
   };
 
   return (
-    <div className="space-y-8">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="app-page">
+      <div className="app-header">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">History & Performance</h1>
-          <p className="text-gray-500 dark:text-gray-400">Historical analysis and system efficiency metrics.</p>
+          <p className="app-eyebrow">Accountability & outcomes</p>
+          <h1 className="app-title">History & Performance</h1>
+          <p className="app-subtitle">Historical analysis and system efficiency metrics.</p>
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline" className="flex items-center gap-2">
@@ -114,7 +115,7 @@ export default function Performance() {
         <CardHeader className="flex flex-row items-start justify-between gap-4">
           <div>
             <CardTitle className="text-lg font-bold flex items-center gap-2">
-              <ShieldCheck className="w-5 h-5 text-blue-500" /> Operations Audit Trail
+              <ShieldCheck className="w-5 h-5 text-[#f36458]" /> Operations Audit Trail
             </CardTitle>
             <CardDescription>Authenticated control actions recorded by the backend.</CardDescription>
           </div>
@@ -188,7 +189,7 @@ export default function Performance() {
           { title: "Successful Advisories", value: "1,248", icon: CheckCircle2, color: "text-blue-500" },
           { title: "Fuel Saved (Est.)", value: "45.2k L", icon: Cpu, color: "text-yellow-500" },
         ].map((stat, i) => (
-          <Card key={i} className="border-black dark:border-black">
+          <Card key={i}>
             <CardContent className="p-6 flex items-center gap-4">
               <div className={`p-3 rounded-xl bg-gray-50 dark:bg-neutral-900 ${stat.color}`}>
                 <stat.icon className="w-6 h-6" />
@@ -204,7 +205,7 @@ export default function Performance() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Before vs After Delay */}
-        <Card className="border-black dark:border-black">
+        <Card>
           <CardHeader>
             <CardTitle className="text-lg font-bold">Before vs After Optimization (Delay Index)</CardTitle>
             <CardDescription>Comparison of average travel delay in minutes.</CardDescription>
@@ -227,7 +228,7 @@ export default function Performance() {
         </Card>
 
         {/* Top Corridor Improvement */}
-        <Card className="border-black dark:border-black">
+        <Card>
           <CardHeader>
             <CardTitle className="text-lg font-bold">Top 5 Corridors (Improvement %)</CardTitle>
             <CardDescription>Corridors with highest efficiency gains this week.</CardDescription>
@@ -242,7 +243,7 @@ export default function Performance() {
                   contentStyle={{ backgroundColor: "#1f2937", border: "none", borderRadius: "8px", color: "#fff" }}
                   itemStyle={{ color: "#fff" }}
                 />
-                <Bar dataKey="improvement" fill="#3b82f6" radius={[0, 4, 4, 0]} />
+                <Bar dataKey="improvement" fill="#f36458" radius={[0, 4, 4, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
@@ -250,14 +251,14 @@ export default function Performance() {
       </div>
 
       {/* Advisory History Table */}
-      <Card className="border-black dark:border-black">
+      <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
             <CardTitle className="text-lg font-bold">Recent Advisory Performance</CardTitle>
             <CardDescription>Log of recent reroute advisories and their outcomes.</CardDescription>
           </div>
-          <div className="p-4 rounded-xl bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800 flex items-center gap-3">
-            <Cpu className="w-5 h-5 text-blue-500" />
+          <div className="p-4 rounded-[6px] bg-[#f36458]/8 border border-[#f36458]/25 flex items-center gap-3">
+            <Cpu className="w-5 h-5 text-[#f36458]" />
             <div>
               <p className="text-[10px] text-blue-700 dark:text-blue-300 font-bold uppercase">Model Status</p>
               <p className="text-xs font-bold">Last retrained: 2h ago</p>

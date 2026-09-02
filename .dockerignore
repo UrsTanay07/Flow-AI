@@ -1,7 +1,9 @@
+.git
+.github
+.env*
+!.env.example
 node_modules
 dist
-data
-.git
-.env
-*.log
 coverage
+data
+*.log

@@ -1389,11 +1389,12 @@ export default function Advisories() {
   );
 
   return (
-    <div className="space-y-8">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="app-page">
+      <div className="app-header">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Reroute Advisories</h1>
-          <p className="text-gray-500 dark:text-gray-400">Dynamic traffic distribution and route optimization.</p>
+          <p className="app-eyebrow">Network balancing</p>
+          <h1 className="app-title">Reroute Advisories</h1>
+          <p className="app-subtitle">Dynamic traffic distribution and route optimization.</p>
         </div>
         <div className="flex items-center gap-2">
           <div className="relative w-full md:w-64">
@@ -1421,7 +1422,7 @@ export default function Advisories() {
             transition={{ delay: i * 0.1 }}
           >
             <Card 
-              className="border-black dark:border-black hover:border-black dark:hover:border-white transition-all duration-300 cursor-pointer group"
+              className="transition-all duration-300 cursor-pointer group hover:-translate-y-0.5"
               onClick={() => setSelectedAdvisory(advisory)}
             >
               <CardHeader className="pb-2">
@@ -1429,11 +1430,11 @@ export default function Advisories() {
                   <Badge variant={advisory.status === "active" ? "destructive" : "secondary"}>
                     {advisory.status.toUpperCase()}
                   </Badge>
-                  <Badge variant="outline" className={advisory.impact === "high" ? "border-red-500 text-red-500" : "border-blue-500 text-blue-500"}>
+                  <Badge variant="outline" className={advisory.impact === "high" ? "border-red-500 text-red-500" : "border-[#f36458] text-[#f36458]"}>
                     {advisory.impact.toUpperCase()} IMPACT
                   </Badge>
                 </div>
-                <CardTitle className="text-lg font-bold group-hover:text-blue-500 transition-colors">{advisory.route}</CardTitle>
+                <CardTitle className="text-lg font-bold group-hover:text-[#f36458] transition-colors">{advisory.route}</CardTitle>
                 <CardDescription className="flex items-center gap-1">
                   <MapPin className="w-3 h-3" /> {advisory.city}
                 </CardDescription>
@@ -1462,7 +1463,7 @@ export default function Advisories() {
             <>
               <DialogHeader>
                 <div className="flex items-center gap-2 mb-2">
-                  <Badge variant="outline" className="border-blue-500 text-blue-500">REROUTE ADVISORY</Badge>
+                  <Badge variant="outline" className="border-[#f36458] text-[#f36458]">REROUTE ADVISORY</Badge>
                   <Badge variant="secondary">{selectedAdvisory.city}</Badge>
                 </div>
                 <DialogTitle className="text-2xl font-bold">{selectedAdvisory.route}</DialogTitle>

@@ -72,16 +72,19 @@ export default function Optimizer() {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="app-page">
       <div className="flex flex-col gap-6">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Signal Optimizer</h1>
-          <p className="text-gray-500 dark:text-gray-400">AI-driven adaptive signal timing recommendations.</p>
+        <div className="app-header">
+          <div>
+            <p className="app-eyebrow">Adaptive control</p>
+            <h1 className="app-title">Signal Optimizer</h1>
+            <p className="app-subtitle">AI-driven adaptive signal timing recommendations.</p>
+          </div>
         </div>
         
         {/* Route/Intersection Selection */}
         <div className="space-y-3">
-          <p className="text-sm font-semibold uppercase text-gray-500 tracking-wider flex items-center gap-2">
+          <p className="app-eyebrow flex items-center gap-2">
             <MapPin className="w-4 h-4" /> Select Route / Intersection
           </p>
           <div className="flex overflow-x-auto pb-2 gap-3 hide-scrollbar">
@@ -110,7 +113,7 @@ export default function Optimizer() {
               exit={{ opacity: 0, y: -10 }}
               className="space-y-8"
             >
-              <Card className="border-black dark:border-black">
+              <Card>
                 <CardHeader className="flex flex-row items-center justify-between">
                   <div>
                     <CardTitle className="text-2xl font-bold">{selectedIntersection.name}</CardTitle>
@@ -229,10 +232,10 @@ export default function Optimizer() {
 
         {/* Right Column: AI Explain & Insights */}
         <div className="space-y-8">
-          <Card className="border-black dark:border-black">
+          <Card>
             <CardHeader>
               <CardTitle className="text-lg font-bold flex items-center gap-2">
-                <Info className="w-4 h-4 text-blue-500" /> AI Reasoning
+                <Info className="w-4 h-4 text-[#f36458]" /> AI Reasoning
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4 text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
@@ -242,7 +245,7 @@ export default function Optimizer() {
               <p>
                 Our model recommends adjusting the green time allocations to clear the {selectedIntersection?.queueLength}m queue before the next peak cycle.
               </p>
-              <div className="p-3 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-900/50 text-blue-700 dark:text-blue-300 flex items-start gap-2">
+              <div className="p-3 rounded-[5px] bg-[#f36458]/8 border border-[#f36458]/25 text-[#b63f37] dark:text-[#ff9a91] flex items-start gap-2">
                 <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
                 <p className="text-xs">
                   Applying this plan is estimated to reduce wait times by <span className="font-bold">4.2 minutes</span> per vehicle.
@@ -251,7 +254,7 @@ export default function Optimizer() {
             </CardContent>
           </Card>
 
-          <Card className="border-black dark:border-black">
+          <Card>
             <CardHeader>
               <CardTitle className="text-lg font-bold">Queue Length Trend</CardTitle>
             </CardHeader>
@@ -264,13 +267,13 @@ export default function Optimizer() {
                       initial={{ height: `${h}%` }}
                       animate={{ height: `${h}%` }}
                       transition={{ type: "spring", bounce: 0.2, duration: 0.8 }}
-                      className={`absolute bottom-0 w-full rounded-t-sm ${h > 75 ? "bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]" : "bg-blue-500"}`}
+                      className={`absolute bottom-0 w-full rounded-t-sm ${h > 75 ? "bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]" : "bg-[#f36458]"}`}
                     />
                   </div>
                 ))}
               </div>
               <div className="flex items-center justify-between mt-3 text-[10px] text-gray-400 font-bold uppercase">
-                <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-blue-500" /> STABLE</span>
+                <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-[#f36458]" /> STABLE</span>
                 <span className="flex items-center gap-1 animate-pulse text-red-500">LIVE <span className="w-2 h-2 rounded-full bg-red-500" /></span>
               </div>
             </CardContent>

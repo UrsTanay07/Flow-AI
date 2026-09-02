@@ -33,7 +33,7 @@ export default function HeatMap() {
     setIsMounted(true);
   }, []);
 
-  if (!isMounted) return <div className="h-[600px] w-full bg-gray-100 dark:bg-neutral-900 animate-pulse rounded-2xl" />;
+  if (!isMounted) return <div className="h-[600px] w-full bg-gray-100 dark:bg-neutral-900 animate-pulse rounded-[6px]" />;
 
   const cityCoords: Record<string, [number, number]> = {
     Mumbai: [19.0760, 72.8777],
@@ -48,8 +48,8 @@ export default function HeatMap() {
   return (
     <div className="space-y-6 relative h-[calc(100vh-200px)] min-h-[600px]">
       <div className="absolute top-4 left-4 z-[1000] flex flex-wrap gap-2 pointer-events-auto">
-        <Card className="bg-white/90 dark:bg-black/90 backdrop-blur-md border-black dark:border-black shadow-xl p-2 flex items-center gap-2">
-          <Layers className="w-4 h-4 text-blue-500 ml-2" />
+        <Card className="bg-[#fafaf8]/95 dark:bg-[#161616]/95 backdrop-blur-md shadow-lg p-2 flex items-center gap-2">
+          <Layers className="w-4 h-4 text-[#f36458] ml-2" />
           <select 
             className="bg-transparent border-none text-sm font-bold focus:ring-0 cursor-pointer"
             value={selectedCity}
@@ -61,7 +61,7 @@ export default function HeatMap() {
           </select>
         </Card>
 
-        <Card className="bg-white/90 dark:bg-black/90 backdrop-blur-md border-black dark:border-black shadow-xl p-2 flex items-center gap-4 px-4">
+        <Card className="bg-[#fafaf8]/95 dark:bg-[#161616]/95 backdrop-blur-md shadow-lg p-2 flex items-center gap-4 px-4">
           <div className="flex items-center gap-2">
             <Clock className="w-4 h-4 text-gray-500" />
             <span className="text-xs font-bold">14:30 (Peak)</span>
@@ -80,8 +80,8 @@ export default function HeatMap() {
       </div>
 
       <div className="absolute bottom-8 left-4 z-[1000] pointer-events-auto">
-        <Card className="bg-white/90 dark:bg-black/90 backdrop-blur-md border-black dark:border-black shadow-xl p-4">
-          <h4 className="text-xs font-bold uppercase tracking-wider mb-3">Congestion Legend</h4>
+        <Card className="bg-[#fafaf8]/95 dark:bg-[#161616]/95 backdrop-blur-md shadow-lg p-4">
+          <h4 className="app-eyebrow mb-3">Congestion Legend</h4>
           <div className="space-y-2">
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 rounded-full bg-green-500" />
@@ -99,7 +99,7 @@ export default function HeatMap() {
         </Card>
       </div>
 
-      <div className="w-full h-full rounded-2xl overflow-hidden border border-black dark:border-black shadow-2xl relative z-0">
+      <div className="w-full h-full rounded-[6px] overflow-hidden ring-1 ring-black/10 dark:ring-white/15 shadow-xl relative z-0">
         <MapContainer 
           center={cityCoords[selectedCity]} 
           zoom={13} 

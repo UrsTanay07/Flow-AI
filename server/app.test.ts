@@ -40,6 +40,29 @@ test("health endpoint responds without authentication", async (t) => {
   assert.equal((await response.json()).status, "ok");
 });
 
+test("readiness verifies writable storage and responses include a request id", async (t) => {
+  const context = await start();
+  t.after(() => context.server.close());
+  t.after(() => fs.rm(context.dataDirectory, { recursive: true, force: true }));
+  const response = await fetch(`${context.baseUrl}/api/ready`, { headers: { "X-Request-ID": "flowai-test-request" } });
+  assert.equal(response.status, 200);
+  assert.equal(response.headers.get("x-request-id"), "flowai-test-request");
+  assert.equal((await response.json()).status, "ready");
+});
+
+test("malformed JSON is rejected as a client error", async (t) => {
+  const context = await start();
+  t.after(() => context.server.close());
+  t.after(() => fs.rm(context.dataDirectory, { recursive: true, force: true }));
+  const response = await fetch(`${context.baseUrl}/api/auth/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: "{",
+  });
+  assert.equal(response.status, 400);
+  assert.equal((await response.json()).error, "Request body must contain valid JSON");
+});
+
 test("authentication creates a server session and rejects invalid credentials", async (t) => {
   const context = await start();
   t.after(() => context.server.close());
@@ -118,4 +141,18 @@ test("prediction endpoint reports confidence and a one-hour forecast", async (t)
   assert.equal(prediction.horizonMinutes, 60);
   assert.equal(prediction.confidence, 64);
   assert.ok(prediction.forecast.congestionIndex > 0);
+});
+
+test("authenticated clients receive a real-time traffic event", async (t) => {
+  const context = await start();
+  t.after(() => context.server.close());
+  t.after(() => fs.rm(context.dataDirectory, { recursive: true, force: true }));
+  const auth = await login(context.baseUrl, "admin@flowai.in", "flowai123");
+  const controller = new AbortController();
+  const response = await fetch(`${context.baseUrl}/api/traffic/stream`, { headers: { Cookie: auth.cookie }, signal: controller.signal });
+  assert.equal(response.status, 200);
+  assert.match(response.headers.get("content-type") ?? "", /text\/event-stream/);
+  const chunk = await response.body?.getReader().read();
+  controller.abort();
+  assert.match(new TextDecoder().decode(chunk?.value), /event: snapshot/);
 });

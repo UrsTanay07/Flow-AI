@@ -48,7 +48,9 @@ Designed for scalability and modern urban logistics, FlowAI empowers city admini
 - 🗺️ **Interactive Heat Maps**: Visual representation of high-density corridors and bottlenecks using Leaflet maps.
 - 🔄 **Smart Rerouting**: Intelligent diversion advisories for emergency services and peak congestion hours.
 - 📈 **Performance Analytics**: Historical trend tracking, signal efficiency metrics, and delay reductions.
-- 🌗 **Cinematic UI/UX**: Ultra-modern interface featuring WebGL background animations, glassmorphism, and seamless Dark/Light mode support.
+- 🌗 **Operational Design System**: Accessible editorial interface with responsive dark/light modes and consistent interaction states.
+- 📡 **Real-Time Updates**: Authenticated server-sent traffic events with automatic polling and labelled demo fallback.
+- 🧭 **Production Readiness**: Health/readiness probes, request IDs, structured logs, container build, and CI quality gates.
 
 ---
 
@@ -107,11 +109,14 @@ In the project directory, you can run:
 
 | Command | Description |
 | :--- | :--- |
-| `npm run dev` | Starts server & Vite dev environment with hot-reloading |
+| `npm run dev` | Starts the API and a reliable watched frontend build |
 | `npm run build` | Compiles production-ready bundle into `dist/` |
 | `npm run preview` | Previews production build locally |
-| `npm run lint` | Runs TypeScript type checking (`tsc --noEmit`) |
+| `npm run typecheck` | Runs strict TypeScript validation |
+| `npm run lint` | Runs the current static quality gate |
 | `npm run test` | Runs server test suite using native Node test runner |
+| `npm run test:coverage` | Runs tests with native coverage reporting |
+| `npm run audit:prod` | Checks production dependencies for known high-severity issues |
 | `npm run check` | Runs lint, unit tests, and production build together |
 
 ---
@@ -138,6 +143,9 @@ Use the pre-configured role accounts below to log into the **City Control Panel*
 - **Operational Safety**: Engineer requests require administrator approval, with rejection and rollback controls.
 - **Durable Audit Store**: Operations and their latest state survive server restarts in the local `data/` store.
 - **Production Container**: Build with `docker build -t flowai .` and run with a mounted data volume.
+- **Supply-Chain Gate**: Production dependencies are separated from build tooling and checked in CI.
+
+More detail is available in the [architecture](docs/ARCHITECTURE.md), [operations runbook](docs/RUNBOOK.md), [security policy](SECURITY.md), and [17-area quality scorecard](docs/QUALITY-SCORECARD.md).
 
 ---
 

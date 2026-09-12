@@ -16,10 +16,12 @@ export default defineConfig(() => {
       target: 'es2022',
       rollupOptions: {
         output: {
-          manualChunks: {
-            'vendor-motion': ['motion/react'],
-            'vendor-charts': ['recharts'],
-            'vendor-map': ['leaflet', 'react-leaflet'],
+          manualChunks(id) {
+            const moduleId = id.replaceAll('\\', '/');
+            if (!moduleId.includes('/node_modules/')) return;
+            if (/\/(motion|framer-motion)\//.test(moduleId)) return 'vendor-motion';
+            if (moduleId.includes('/recharts/')) return 'vendor-charts';
+            if (/\/(leaflet|react-leaflet)\//.test(moduleId)) return 'vendor-map';
           },
         },
       },
